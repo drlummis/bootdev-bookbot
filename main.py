@@ -1,8 +1,17 @@
+import sys
+from stats import get_word_count
+from stats import get_character_counts
+
 def main():
-    book_path = "books/frankenstein.txt"
+    if len(sys.argv) != 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+    book_path = sys.argv[1]
     text = get_file_text(book_path)
     word_count = get_word_count(text)
+    print(f"{word_count} words found in the document")
     chars_dict = get_character_counts(text)
+    print(chars_dict)
     print_report(book_path, word_count, chars_dict)
 
 def get_file_text(path):
@@ -10,27 +19,14 @@ def get_file_text(path):
         contents = f.read()
     return contents
 
-def get_word_count(text):
-    words = text.split()
-    return len(words)
-
-def get_character_counts(text):
-    chars = {}
-    for char in text:
-        if char.isalpha():
-            char = char.lower()
-            if char in chars:
-                chars[char] += 1
-            else:
-                chars[char] = 1
-    return chars
-
 def print_report(book_path, word_count, chars_dict):
-    print(f"--- Begin report of {book_path} ---")
-    print(f"{word_count} words found in the document")
-    print()
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {book_path}...")
+    print(f"----------- Word Count ----------")
+    print(f"Found {word_count} total words")
+    print("--------- Character Count -------")
     print_character_counts(chars_dict)
-    print("--- End report ---")
+    print("============= END ===============")
 
 def print_character_counts(chars_dict):
     chars_list = convert_chars_dict_to_list(chars_dict)
@@ -38,7 +34,7 @@ def print_character_counts(chars_dict):
     for dic in chars_list:
         char = dic["letter"]
         count = dic["count"]
-        print(f"The '{char}' character was found {count} times")
+        print(f"{char}: {count}")
 
 def convert_chars_dict_to_list(chars_dict):
     chars_list = []
